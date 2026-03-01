@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #0f172a;
+    color: white;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 50px;
+    background: #1e293b;
+}
+
+.logo {
+    color: #38bdf8;
+}
+
+nav a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #38bdf8;
+}
+
+.hero {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 40px;
+}
+
+.hero h3 {
+    color: #38bdf8;
+    margin: 10px 0;
+}
+
+button {
+    padding: 10px 20px;
+    background: #38bdf8;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #0ea5e9;
+}
+
+.section {
+    padding: 80px 50px;
+    text-align: center;
+}
+
+.skills-container,
+.project-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.skill-card,
+.project-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    width: 200px;
+    transition: 0.3s;
+}
+
+.skill-card:hover,
+.project-card:hover {
+    transform: scale(1.1);
+    background: #38bdf8;
+    color: black;
+}
+
+footer {
+    padding: 20px;
+    background: #1e293b;
+    text-align: center;
+}
