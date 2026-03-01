@@ -2,79 +2,229 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Ridham Gupta | Developer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Ridham Gupta, a full stack developer focused on responsive, scalable web applications.">
+    <title>Ridham Gupta | Full Stack Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <canvas id="scene-canvas" aria-hidden="true"></canvas>
 
-    <!-- Navbar -->
-    <header>
-        <h2 class="logo">Ridham.</h2>
-        <nav>
+    <header class="site-header">
+        <a href="#home" class="brand">Ridham<span>Gupta</span></a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle navigation menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
             <a href="#home">Home</a>
             <a href="#about">About</a>
             <a href="#skills">Skills</a>
             <a href="#projects">Projects</a>
+            <a href="#coursework">Coursework</a>
             <a href="#contact">Contact</a>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1>Hi, I'm Ridham 👋</h1>
-            <h3>Full Stack Developer</h3>
-            <p>I build modern, responsive and powerful web applications.</p>
-            <button onclick="scrollToContact()">Hire Me</button>
-        </div>
-    </section>
-
-    <!-- About -->
-    <section id="about" class="section">
-        <h2>About Me</h2>
-        <p>
-            I have a strong foundation in Java, JavaScript, HTML, CSS, and C.
-            I’m actively building my development skills and improving practical knowledge through projects.
-        </p>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills" class="section">
-        <h2>My Skills</h2>
-        <div class="skills-container">
-            <div class="skill-card">Java</div>
-            <div class="skill-card">JavaScript</div>
-            <div class="skill-card">HTML</div>
-            <div class="skill-card">CSS</div>
-            <div class="skill-card">C Programming</div>
-        </div>
-    </section>
-
-    <!-- Projects -->
-    <section id="projects" class="section">
-        <h2>Projects</h2>
-        <div class="project-container">
-            <div class="project-card">
-                <h3>Snake Game</h3>
-                <p>Terminal based snake game using C programming.</p>
+    <main id="main-content">
+        <section id="home" class="section hero">
+            <div class="hero-copy reveal">
+                <p class="eyebrow">Open to internships and freelance work</p>
+                <h1>Building fast, reliable web experiences with clean backend logic.</h1>
+                <p>
+                    I am Ridham Gupta, a full stack developer with hands-on experience in Java, JavaScript,
+                    HTML, CSS, and C. I build practical products with strong fundamentals and clear user experience.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn btn-primary" href="#projects">View Projects</a>
+                    <a class="btn btn-ghost" href="#contact">Let's Connect</a>
+                </div>
+                <div class="hero-metrics" role="list" aria-label="Highlights">
+                    <article class="metric" role="listitem">
+                        <h3>5+</h3>
+                        <p>Core technologies</p>
+                    </article>
+                    <article class="metric" role="listitem">
+                        <h3>3</h3>
+                        <p>Featured projects</p>
+                    </article>
+                    <article class="metric" role="listitem">
+                        <h3>2026</h3>
+                        <p>Continuous learning</p>
+                    </article>
+                </div>
             </div>
-            <div class="project-card">
-                <h3>Portfolio Website</h3>
-                <p>Personal responsive website using HTML, CSS, JS.</p>
-            </div>
-        </div>
-    </section>
 
-    <!-- Contact -->
-    <section id="contact" class="section">
-        <h2>Contact Me</h2>
-        <p>Email: ridham@example.com</p>
-        <p>Phone: +91 XXXXX XXXXX</p>
-    </section>
+            <aside class="hero-panel reveal" aria-label="Developer profile quick view">
+                <p class="panel-title">Quick Snapshot</p>
+                <ul>
+                    <li>Role: Full Stack Developer</li>
+                    <li>Main stack: Java + JavaScript</li>
+                    <li>Focus: Responsive web apps</li>
+                    <li>Goal: Production-grade systems</li>
+                </ul>
+            </aside>
+        </section>
+
+        <section id="about" class="section">
+            <div class="section-head reveal">
+                <p class="eyebrow">About Me</p>
+                <h2>Engineering mindset with practical execution.</h2>
+                <p>
+                    I like building applications that solve real problems and remain easy to maintain.
+                    My development style focuses on clean code, responsive design, and reliable logic.
+                </p>
+            </div>
+
+            <div class="about-grid">
+                <article class="card reveal">
+                    <h3>Problem Solving</h3>
+                    <p>Strong foundation in data structures and algorithmic thinking.</p>
+                </article>
+                <article class="card reveal">
+                    <h3>UI + Backend Balance</h3>
+                    <p>Comfortable designing interfaces and implementing backend logic.</p>
+                </article>
+                <article class="card reveal">
+                    <h3>Growth Driven</h3>
+                    <p>Continuously improving through projects, documentation, and iteration.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="skills" class="section">
+            <div class="section-head reveal">
+                <p class="eyebrow">My Skills</p>
+                <h2>Tools I use to ship features.</h2>
+            </div>
+
+            <div class="skills-grid">
+                <article class="card reveal">
+                    <h3>Languages</h3>
+                    <ul class="chip-list">
+                        <li>Java</li>
+                        <li>JavaScript</li>
+                        <li>C</li>
+                    </ul>
+                </article>
+                <article class="card reveal">
+                    <h3>Frontend</h3>
+                    <ul class="chip-list">
+                        <li>HTML5</li>
+                        <li>CSS3</li>
+                        <li>Responsive Design</li>
+                    </ul>
+                </article>
+                <article class="card reveal">
+                    <h3>Developer Workflow</h3>
+                    <ul class="chip-list">
+                        <li>Git & GitHub</li>
+                        <li>Debugging</li>
+                        <li>Clean Code</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section id="projects" class="section">
+            <div class="section-head reveal">
+                <p class="eyebrow">Projects</p>
+                <h2>Recent builds and learning projects.</h2>
+            </div>
+
+            <div class="project-grid">
+                <article class="card project-card reveal">
+                    <h3>Snake Game (C)</h3>
+                    <p>Terminal game with movement logic, score tracking, and collision handling.</p>
+                    <div class="tags">
+                        <span>C</span>
+                        <span>Game Logic</span>
+                    </div>
+                </article>
+                <article class="card project-card reveal">
+                    <h3>Portfolio Website</h3>
+                    <p>Multi-section personal website with responsive UI and modern interactions.</p>
+                    <div class="tags">
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                    </div>
+                </article>
+                <article class="card project-card reveal">
+                    <h3>Task Tracker (Planned)</h3>
+                    <p>Upcoming web app for organizing daily tasks with filtering and status updates.</p>
+                    <div class="tags">
+                        <span>JavaScript</span>
+                        <span>Productivity</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="coursework" class="section">
+            <div class="section-head reveal">
+                <p class="eyebrow">Additional Coursework</p>
+                <h2>Core subjects strengthening my development foundation.</h2>
+            </div>
+
+            <div class="course-grid">
+                <article class="card reveal">
+                    <h3>Data Structures & Algorithms</h3>
+                    <p>Complexity analysis, searching, sorting, and optimization patterns.</p>
+                </article>
+                <article class="card reveal">
+                    <h3>Object Oriented Programming</h3>
+                    <p>Encapsulation, inheritance, abstraction, and reusable design patterns.</p>
+                </article>
+                <article class="card reveal">
+                    <h3>Database Fundamentals</h3>
+                    <p>Relational modeling, SQL basics, and structured data thinking.</p>
+                </article>
+                <article class="card reveal">
+                    <h3>Computer Networks</h3>
+                    <p>Client-server communication, protocols, and system-level understanding.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="section-head reveal">
+                <p class="eyebrow">Contact</p>
+                <h2>Let's build something useful together.</h2>
+            </div>
+
+            <div class="contact-grid">
+                <div class="card reveal">
+                    <h3>Reach Me</h3>
+                    <p>Email: <a href="ridham.gupta.programming@gmail.com">ridham.gupta.programming@gmail.com</a></p>
+                    <p>Phone: <a href="tel:+919695920641">+91 9695920641</a></p>
+                    <p>Location: India</p>
+                </div>
+
+                <form id="contact-form" class="card reveal" novalidate>
+                    <label for="name">Name</label>
+                    <input id="name" name="name" type="text" required placeholder="Your name">
+
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" required placeholder="you@example.com">
+
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="4" required placeholder="Tell me about your project"></textarea>
+
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                    <p class="form-feedback" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        <p>© 2026 Ridham Gupta | All Rights Reserved</p>
+        <p>&copy; <span id="current-year"></span> Ridham Gupta | All Rights Reserved</p>
     </footer>
 
     <script src="script.js"></script>
