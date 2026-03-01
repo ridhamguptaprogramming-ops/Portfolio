@@ -532,3 +532,73 @@ if (contactForm && formFeedback) {
         contactForm.reset();
     });
 }
+
+// ---------- todo list integration ----------
+const todoInput = document.getElementById("new-task");
+const addButton = document.getElementById("add-task");
+const taskList = document.getElementById("task-list");
+const taskSummary = document.getElementById("task-summary");
+
+const updateTaskSummary = () => {
+    if (!taskSummary) return;
+    const count = taskList ? taskList.children.length : 0;
+    taskSummary.textContent = `${count} task${count === 1 ? "" : "s"}`;
+};
+
+const saveTasks = () => {
+    if (!taskList) return;
+    const tasks = Array.from(taskList.children).map((li) => ({
+        text: li.querySelector(".task-text").textContent,
+        completed: li.classList.contains("completed"),
+    }));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    updateTaskSummary();
+};
+
+const renderTask = ({ text, completed }) => {
+    if (!taskList) return;
+    const li = document.createElement("li");
+    if (completed) li.classList.add("completed");
+    const span = document.createElement("span");
+    span.textContent = text;
+    span.className = "task-text";
+    span.addEventListener("click", () => {
+        li.classList.toggle("completed");
+        saveTasks();
+    });
+    const del = document.createElement("button");
+    del.className = "delete-btn";
+    del.textContent = "✕";
+    del.addEventListener("click", () => {
+        li.remove();
+        saveTasks();
+    });
+    li.append(span, del);
+    taskList.appendChild(li);
+};
+
+const loadTasks = () => {
+    if (!taskList) return;
+    try {
+        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        tasks.forEach(renderTask);
+    } catch (e) {
+        console.error("Failed to load tasks", e);
+    }
+    updateTaskSummary();
+};
+
+if (addButton && todoInput) {
+    addButton.addEventListener("click", () => {
+        const text = todoInput.value.trim();
+        if (!text) return;
+        renderTask({ text, completed: false });
+        saveTasks();
+        todoInput.value = "";
+    });
+    todoInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addButton.click();
+    });
+}
+
+loadTasks();
