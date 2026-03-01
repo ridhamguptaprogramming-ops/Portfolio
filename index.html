@@ -13,6 +13,9 @@
 <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <canvas id="scene-canvas" aria-hidden="true"></canvas>
+    <!-- premium orb floating when active -->
+    <div id="premium-orb" aria-hidden="true"></div>
+
 
     <header class="site-header">
         <a href="#home" class="brand">Ridham<span>Gupta</span></a>
@@ -25,9 +28,12 @@
             <a href="#home">Home</a>
             <a href="#about">About</a>
             <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>            <a href="#todo">Todo</a>            <a href="#coursework">Coursework</a>
+            <a href="#projects">Projects</a>
+            <a href="#todo">Todo</a>
+            <a href="#coursework">Coursework</a>
             <a href="#contact">Contact</a>
         </nav>
+        <button id="premium-toggle" class="premium-toggle" aria-pressed="false" title="Toggle premium visuals">🌌 Premium</button>
     </header>
 
     <main id="main-content">
@@ -165,23 +171,6 @@
                 </article>
             </div>
         </section>
-
-        <!-- futuristic todo section inserted -->
-        <section id="todo" class="section futuristic-section">
-            <div class="section-head reveal">
-                <p class="eyebrow">Premium AI <span class="ai-badge"></span></p>
-                <h2>Futuristic Task Tracker 🟣</h2>
-                <p>Manage your tasks with neon‑glow animations and local storage persistence.</p>
-            </div>
-            <div class="todo-container reveal">
-                <div class="todo-input-group">
-                    <input id="new-task" type="text" placeholder="Enter a task…" />
-                    <button id="add-task" class="btn btn-primary">Add</button>
-                </div>
-                <ul id="task-list" class="todo-list"></ul>
-            </div>
-        </section>
-
         <section id="coursework" class="section">
             <div class="section-head reveal">
                 <p class="eyebrow">Additional Coursework</p>

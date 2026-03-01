@@ -23,6 +23,10 @@ const init3DBackground = () => {
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
+    const orb = document.getElementById("premium-orb");
+    const premiumToggle = document.getElementById("premium-toggle");
+    let orbPos = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.5 };
+    let orbTarget = { x: orbPos.x, y: orbPos.y };
     let width = 0;
     let height = 0;
     let dpr = 1;
@@ -39,6 +43,41 @@ const init3DBackground = () => {
     let comets = [];
     let frameId = null;
     let isAnimating = false;
+    let premiumMode = false;
+
+    const setPremiumMode = (active) => {
+        premiumMode = active;
+        if (premiumMode) {
+            qualityTier = "high";
+        } else {
+            qualityTier = computeQualityTier();
+        }
+        const counts = getCounts();
+        maxComets = counts.maxComets;
+        stars = Array.from({ length: counts.starCount }, createStar);
+        dust = Array.from({ length: counts.dustCount }, createDustParticle);
+        document.body.classList.toggle("premium-active", active);
+        if (orb) {
+            orb.classList.toggle("pulse", active);
+        }
+    };
+
+    const spawnPremiumComet = () => {
+        if (maxComets <= 0) return;
+        // if user isn't in premium section, flash the effect briefly
+        if (!premiumMode) {
+            setPremiumMode(true);
+            setTimeout(() => setPremiumMode(false), 1500);
+        }
+        if (orb) {
+            orb.classList.add("burst");
+            orb.addEventListener("animationend", () => orb.classList.remove("burst"), { once: true });
+        }
+        const comet = createComet();
+        comet.hue = random(260, 320);
+        comet.width *= 1.6;
+        comets.push(comet);
+    };
 
     const random = (min, max) => Math.random() * (max - min) + min;
     const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -61,25 +100,26 @@ const init3DBackground = () => {
 
     const getCounts = () => {
         const areaFactor = (width * height) / 9000;
+        let starCount;
         if (qualityTier === "low") {
-            const starCount = clamp(Math.floor(areaFactor * 0.45), 70, 145);
-            return { starCount, dustCount: Math.floor(starCount * 0.45), maxComets: 0 };
+            starCount = clamp(Math.floor(areaFactor * 0.45), 70, 145);
+            return { starCount: premiumMode ? starCount * 1.2 : starCount, dustCount: Math.floor(starCount * 0.45), maxComets: 0 };
         }
         if (qualityTier === "medium") {
-            const starCount = clamp(Math.floor(areaFactor * 0.72), 100, 235);
-            return { starCount, dustCount: Math.floor(starCount * 0.58), maxComets: 1 };
+            starCount = clamp(Math.floor(areaFactor * 0.72), 100, 235);
+            return { starCount: premiumMode ? starCount * 1.3 : starCount, dustCount: Math.floor(starCount * 0.58), maxComets: premiumMode ? 2 : 1 };
         }
-        const starCount = clamp(Math.floor(areaFactor), 140, 340);
-        return { starCount, dustCount: Math.floor(starCount * 0.72), maxComets: 2 };
+        starCount = clamp(Math.floor(areaFactor), 140, 340);
+        return { starCount: premiumMode ? starCount * 1.5 : starCount, dustCount: Math.floor(starCount * 0.72), maxComets: premiumMode ? 4 : 2 };
     };
 
     const createStar = () => ({
         x: random(-width * 0.9, width * 0.9),
         y: random(-height * 0.9, height * 0.9),
         z: random(1, depth),
-        speed: random(2.2, qualityTier === "high" ? 7.8 : 6.5),
-        size: random(0.4, 2.4),
-        hue: random(165, 220),
+        speed: random(2.2, premiumMode ? 8.8 : (qualityTier === "high" ? 7.8 : 6.5)),
+        size: random(0.4, premiumMode ? 3.2 : 2.4),
+        hue: premiumMode ? random(220, 300) : random(165, 220),
         twinkle: random(0, Math.PI * 2)
     });
 
@@ -94,16 +134,16 @@ const init3DBackground = () => {
     });
 
     const createComet = () => {
-        const life = random(52, 88);
+        const life = random(52, premiumMode ? 98 : 88);
         return {
             x: random(-width * 0.25, width * 0.72),
             y: random(-height * 0.3, height * 0.35),
-            vx: random(9.5, 15.5),
-            vy: random(2.2, 4.7),
+            vx: random(9.5, premiumMode ? 18.5 : 15.5),
+            vy: random(2.2, premiumMode ? 6.7 : 4.7),
             life,
             maxLife: life,
-            width: random(1.2, 2.2),
-            hue: random(176, 212)
+            width: random(1.2, premiumMode ? 3.2 : 2.2),
+            hue: premiumMode ? random(260, 320) : random(176, 212)
         };
     };
 
@@ -237,14 +277,14 @@ const init3DBackground = () => {
     };
 
     const drawConnections = (projected) => {
-        if (qualityTier !== "high" || projected.length < 2) {
+        if ((qualityTier !== "high" && !premiumMode) || projected.length < 2) {
             return;
         }
 
         const maxDistance = 98;
         const maxDistanceSq = maxDistance * maxDistance;
         const points = projected.slice(0, 68);
-        let linesLeft = 44;
+        let linesLeft = premiumMode ? 68 : 44;
 
         for (let i = 0; i < points.length && linesLeft > 0; i += 1) {
             const pointA = points[i];
@@ -260,7 +300,8 @@ const init3DBackground = () => {
 
                 const strength = 1 - distanceSq / maxDistanceSq;
                 const alpha = strength * Math.min(pointA.alpha, pointB.alpha) * 0.16;
-                context.strokeStyle = `rgba(171, 246, 227, ${alpha})`;
+                const color = premiumMode ? `rgba(186, 106, 255, ${alpha})` : `rgba(171, 246, 227, ${alpha})`;
+                context.strokeStyle = color;
                 context.lineWidth = 0.38 + (pointA.radius + pointB.radius) * 0.05;
                 context.beginPath();
                 context.moveTo(pointA.x, pointA.y);
@@ -344,6 +385,12 @@ const init3DBackground = () => {
         lastFrameTime = time;
         const delta = clamp(rawDelta, 0.45, 2.3);
         drawScene(delta, false, time);
+        // animate orb
+        if (orb && premiumMode) {
+            orbPos.x += (orbTarget.x - orbPos.x) * 0.12;
+            orbPos.y += (orbTarget.y - orbPos.y) * 0.12;
+            orb.style.transform = `translate(${orbPos.x}px, ${orbPos.y}px) translate(-50%, -50%)`;
+        }
         frameId = requestAnimationFrame(renderFrame);
     };
 
@@ -361,6 +408,13 @@ const init3DBackground = () => {
         centerY = height * 0.5;
         focalLength = clamp(width * 0.36, 290, 620);
         depth = Math.max(980, width * 1.35);
+        if (orb) {
+            orbPos.x = width * 0.5;
+            orbPos.y = height * 0.5;
+            orbTarget.x = orbPos.x;
+            orbTarget.y = orbPos.y;
+            orb.style.transform = `translate(${orbPos.x}px, ${orbPos.y}px) translate(-50%, -50%)`;
+        }
 
         qualityTier = computeQualityTier();
         const counts = getCounts();
@@ -406,6 +460,8 @@ const init3DBackground = () => {
     window.addEventListener("pointermove", (event) => {
         pointer.targetX = ((event.clientX / width) * 2 - 1) * 0.9;
         pointer.targetY = ((event.clientY / height) * 2 - 1) * 0.9;
+        orbTarget.x = event.clientX;
+        orbTarget.y = event.clientY;
     }, { passive: true });
 
     window.addEventListener("pointerout", (event) => {
@@ -419,6 +475,15 @@ const init3DBackground = () => {
     window.addEventListener("orientationchange", setCanvasSize);
     document.addEventListener("visibilitychange", syncMotionPreference);
 
+    // manual toggle button
+    if (premiumToggle) {
+        premiumToggle.addEventListener("click", () => {
+            const current = premiumToggle.getAttribute("aria-pressed") === "true";
+            setPremiumMode(!current);
+            premiumToggle.setAttribute("aria-pressed", String(!current));
+        });
+    }
+
     if (typeof motionQuery.addEventListener === "function") {
         motionQuery.addEventListener("change", syncMotionPreference);
     } else if (typeof motionQuery.addListener === "function") {
@@ -427,9 +492,34 @@ const init3DBackground = () => {
 
     setCanvasSize();
     syncMotionPreference();
+    // expose control functions for outside interaction
+    window.bgControls = { setPremiumMode, spawnPremiumComet };
 };
 
 init3DBackground();
+
+// observe when the premium todo section enters viewport
+const todoSection = document.getElementById("todo");
+if (todoSection) {
+    const todoObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (window.bgControls && window.bgControls.setPremiumMode) {
+                window.bgControls.setPremiumMode(entry.isIntersecting);
+            }
+            if (premiumToggle) {
+                premiumToggle.setAttribute("aria-pressed", String(entry.isIntersecting));
+            }
+            if (orb) {
+                if (entry.isIntersecting) {
+                    orb.classList.add("pulse");
+                } else {
+                    orb.classList.remove("pulse");
+                }
+            }
+        });
+    }, { threshold: 0.3 });
+    todoObserver.observe(todoSection);
+} 
 
 const closeMobileMenu = () => {
     if (!siteNav || !menuToggle) {
@@ -545,42 +635,60 @@ const updateTaskSummary = () => {
     taskSummary.textContent = `${count} task${count === 1 ? "" : "s"}`;
 };
 
-const saveTasks = () => {
-    if (!taskList) return;
-    const tasks = Array.from(taskList.children).map((li) => ({
-        text: li.querySelector(".task-text").textContent,
-        completed: li.classList.contains("completed"),
-    }));
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    updateTaskSummary();
-};
+// network helpers
+const fetchTasks = () => fetch("/tasks").then((r) => r.json());
+const addTaskToServer = (text) =>
+    fetch("/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+    }).then((r) => r.json());
+const updateTaskOnServer = (id, completed) =>
+    fetch(`/tasks/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completed }),
+    });
+const deleteTaskOnServer = (id) =>
+    fetch(`/tasks/${id}`, { method: "DELETE" });
 
-const renderTask = ({ text, completed }) => {
+const renderTask = (task) => {
     if (!taskList) return;
     const li = document.createElement("li");
-    if (completed) li.classList.add("completed");
+    li.dataset.id = task.id;
+    if (task.completed) li.classList.add("completed");
     const span = document.createElement("span");
-    span.textContent = text;
+    span.textContent = task.text;
     span.className = "task-text";
-    span.addEventListener("click", () => {
+    span.addEventListener("click", async () => {
         li.classList.toggle("completed");
-        saveTasks();
+        try {
+            await updateTaskOnServer(task.id, li.classList.contains("completed"));
+        } catch (e) {
+            console.warn("Failed to update task", e);
+        }
+        updateTaskSummary();
     });
     const del = document.createElement("button");
     del.className = "delete-btn";
     del.textContent = "✕";
-    del.addEventListener("click", () => {
+    del.addEventListener("click", async () => {
         li.remove();
-        saveTasks();
+        try {
+            await deleteTaskOnServer(task.id);
+        } catch (e) {
+            console.warn("Failed to delete task", e);
+        }
+        updateTaskSummary();
     });
     li.append(span, del);
     taskList.appendChild(li);
 };
 
-const loadTasks = () => {
+const loadTasks = async () => {
     if (!taskList) return;
     try {
-        const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        const tasks = await fetchTasks();
         tasks.forEach(renderTask);
     } catch (e) {
         console.error("Failed to load tasks", e);
@@ -589,12 +697,22 @@ const loadTasks = () => {
 };
 
 if (addButton && todoInput) {
-    addButton.addEventListener("click", () => {
+    addButton.addEventListener("click", async () => {
         const text = todoInput.value.trim();
         if (!text) return;
-        renderTask({ text, completed: false });
-        saveTasks();
+        try {
+            const created = await addTaskToServer(text);
+            renderTask(created);
+        } catch (e) {
+            console.error("Error creating task", e);
+            return;
+        }
+        // premium comet effect on each new task
+        if (window.bgControls && window.bgControls.spawnPremiumComet) {
+            window.bgControls.spawnPremiumComet();
+        }
         todoInput.value = "";
+        updateTaskSummary();
     });
     todoInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") addButton.click();

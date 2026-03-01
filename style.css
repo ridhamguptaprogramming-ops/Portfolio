@@ -653,6 +653,89 @@ footer {
     50% { transform: scale(1.6); opacity: 0.6; }
 }
 
+/* body-level premium effect */
+body.premium-active::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(180,134,255,0.08), transparent 70%);
+    pointer-events: none;
+    animation: pulse-purple 8s infinite;
+    z-index: 0;
+}
+
+body.premium-active #scene-canvas {
+    filter: hue-rotate(20deg) saturate(1.2);
+}
+
+/* glow headings when premium is active */
+body.premium-active h1,
+body.premium-active h2,
+body.premium-active h3 {
+    text-shadow: 0 0 8px #b486ff, 0 0 18px #7623ff;
+}
+
+/* premium orb and toggle button */
+#premium-orb {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #b486ff 0%, #7623ff 80%);
+    box-shadow: 0 0 24px rgba(180,134,255,0.8), 0 0 64px rgba(186,106,255,0.4);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+    transition: opacity 0.4s, transform 0.4s;
+    z-index: 50;
+}
+
+body.premium-active #premium-orb {
+    opacity: 1;
+}
+
+@keyframes orb-pulse {
+    0%,100% {transform: translate(-50%, -50%) scale(1);}
+    50% {transform: translate(-50%, -50%) scale(1.6);}
+}
+
+#premium-orb.pulse {
+    animation: orb-pulse 1.4s infinite;
+}
+
+@keyframes orb-burst {
+    0% {transform: translate(-50%, -50%) scale(1); opacity:1;}
+    100% {transform: translate(-50%, -50%) scale(2); opacity:0;}
+}
+
+#premium-orb.burst {
+    animation: orb-burst 0.6s forwards;
+}
+
+.premium-toggle {
+    background: var(--primary);
+    color: #042319;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: background 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.premium-toggle[aria-pressed="true"] {
+    background: #b486ff;
+    color: #120927;
+}
+
+.premium-toggle:hover {
+    background: var(--primary-strong);
+}
+
 .muted-text {
     color: var(--muted);
     font-size: 0.92rem;
